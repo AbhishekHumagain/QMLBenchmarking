@@ -1,29 +1,3 @@
-```markdown
-# QEBS – Quantum Encoding Benchmark Suite
-
-**A clean, modular, reproducible benchmark for classical-to-quantum data encoding strategies in Quantum Machine Learning.**
-
-This repository implements the **Quantum Encoding Benchmark Suite (QEBS)** used in the paper  
-*“Benchmarking Hybrid Quantum Data Encoding Methods”*  
-Abhishek Humagain¹⋆ & Wilson Patterson¹⋆ – Mississippi State University (November 2025).
-
-![Composite Efficiency Score (Noise-Free)](results/CES_nov2025_modular.png)
-
-## Key Features
-
-- Standardized preprocessing pipeline (Challenge 1)
-- Four encoding strategies compared under identical qubit budget:
-  - Angle-XY (dense angle encoding)
-  - IQP (dense instantaneous quantum polynomial)
-  - Basis encoding
-  - **BPHE** – Bit-Partition Hybrid Encoding (focus of the study)
-- Hardware-efficient Variational Quantum Classifier (VQC)
-- Modern PennyLane resource profiling (`qml.specs`)
-- Composite Efficiency Score (CES) with weights [0.5, 0.3, 0.2]
-- Ready for noisy simulation & real hardware (Week 5 extensions)
-
-**Main result (noise-free simulator, Nov 14 2025):**  
-BPHE achieves the highest CES on the MNIST 4-vs-9 task (16 qubits) and ranks in the top-2 on Iris & Breast Cancer – first empirical validation of BPHE superiority under resource constraints.
 
 ## Repository Structure
 
@@ -52,11 +26,25 @@ quantum-encoding-benchmark/
 git clone https://github.com/yourusername/quantum-encoding-benchmark.git
 cd quantum-encoding-benchmark
 
-python3 -m venv venv
-source venv/bin/activate          # macOS/Linux
-# .\venv\Scripts\activate         # Windows
+# 1. Create an isolated environment (highly recommended)
+python3 -m venv qml-bench
+source qml-bench/bin/activate
 
-pip install pennylane scikit-learn pandas matplotlib seaborn
+# 2. Upgrade pip and install the core stack
+pip install --upgrade pip
+
+# Core quantum frameworks
+pip install pennylane==0.38.\* qiskit==1.2.\* qiskit-aer
+
+# Additional useful tools
+pip install scikit-learn pandas matplotlib seaborn jupyterlab torch torchvision
+
+# Optional: IBM Quantum access (free account is enough for 5–7 qubit jobs)
+pip install qiskit-ibm-provider
+
+#If you get any error related to autoray then run this command
+pip uninstall pennylane autoray -y
+pip install pennylane
 ```
 
 Run the full benchmark:
@@ -84,17 +72,6 @@ Outputs appear in `./results/`:
 - **Noisy simulation** → edit `models/vqc.py` and change device to `default.mixed` with depolarizing noise.
 - **Real hardware** → replace device with an IBM Quantum backend (free tier works for 8-qubit jobs).
 - **Add new encoding** → drop a new file in `qml_encodings/` and import it in `__init__.py`.
-
-## Citation (forthcoming)
-
-```bibtex
-@misc{humagain2025qebs,
-  title = {Benchmarking Hybrid Quantum Data Encoding Methods},
-  author = {Abhishek Humagain and Wilson Patterson},
-  year = {2025},
-  note = {Preprint, code available at https://github.com/yourusername/quantum-encoding-benchmark}
-}
-```
 
 ## License
 
