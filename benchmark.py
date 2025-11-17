@@ -28,17 +28,21 @@ for ds in datasets:
     print(f"\n=== Dataset: {ds} (qubits = {n_q}) ===")
     for name, enc_fn in ENCODINGS.items():
         print(f"  Running {name}...")
-        acc, auc, res_cost = train_and_evaluate(ds, name, enc_fn, n_q)
-        ces = composite_efficiency_score(auc, res_cost)
+        acc, auc, prec, rec, f1, rc = train_and_evaluate(ds, name, enc_fn, n_q)
+        ces = composite_efficiency_score(auc, rc)
         results.append({
             "Dataset": ds,
             "Encoding": name,
             "Qubits": n_q,
             "Accuracy": round(acc, 4),
             "AUC": round(auc, 4),
-            "Resource Cost": round(res_cost, 4),
+            "Precision": round(prec, 4),
+            "Recall": round(rec, 4),
+            "F1-Score": round(f1, 4),
+            "ResourceCost": round(rc, 4),
             "CES": round(ces, 4)
         })
+        print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f} CES={ces:.4f}")
 
 # ==================== PREVIOUS BENCHMARK LOOP (FOR REFERENCE) ====================
 # results = []

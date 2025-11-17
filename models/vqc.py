@@ -28,55 +28,52 @@ def create_circuit(encoding_fn, n_qubits=8, n_layers=5):
 
 # ==================== TRAINING & EVALUATION ====================
 # Inside train_and_evaluate function – replace the entire function with this version
-def train_and_evaluate(dataset_name, encoding_name, encoding_fn, n_qubits=8, n_layers=5, epochs=120, batch_size=32):
-    X_train, X_test, y_train, y_test = load_dataset(dataset_name, n_components=n_qubits)
+def train_and_evaluate(dataset_name, encoding_name, encoding_fn,
+                       n_qubits=8, n_layers=5, epochs=150, batch_size=32):
+    from utils.data_loader import load_dataset
+    from sklearn.metrics import accuracy_score, roc_auc_score, \
+                                 precision_score, recall_score, f1_score
 
+    X_train, X_test, y_train, y_test = load_dataset(dataset_name, n_components=n_qubits)
     circuit = create_circuit(encoding_fn, n_qubits, n_layers)
 
-    weights = np.random.uniform(0, 2 * np.pi, size=(n_layers, 2 * n_qubits))
-    opt = qml.AdamOptimizer(stepsize=0.05)
+    weights = np.random.uniform(0, 2 * np.pi, (n_layers, 2 * n_qubits))
+    opt = qml.AdamOptimizer(stepsize=0.06)
 
-    # Map labels {0,1} → {-1,+1} for PauliZ expectation
     y_train_pm = 2 * y_train - 1
-    y_test_pm  = 2 * y_test - 1
 
-    # Proper cost function with mini-batch sampling
-    def cost_fn(weights):
-        batch_indices = random.sample(range(len(X_train)), min(batch_size, len(X_train)))
-        total = 0.0
-        for i in batch_indices:
-            pred = circuit(X_train[i], weights)
-            total += (pred - y_train_pm[i]) ** 2
-        return total / len(batch_indices)
+    def cost_fn(w):
+        idx = random.sample(range(len(X_train)), min(batch_size, len(X_train)))
+        return np.mean([(circuit(X_train[i], w) - y_train_pm[i]) ** 2 for i in idx])
 
-    best_weights = weights.copy()
     best_auc = 0.0
+    best_weights = weights.copy()
 
     for epoch in range(epochs):
         opt.step(cost_fn, weights)
-
-        # Periodic evaluation on full test set
-        if epoch % 20 == 0 or epoch == epochs-1:
+        if epoch % 30 == 0 or epoch == epochs - 1:
             preds = np.array([(circuit(x, weights) + 1) / 2 for x in X_test])
-            current_auc = roc_auc_score(y_test, preds)
-            if current_auc > best_auc:
-                best_auc = current_auc
+            auc = roc_auc_score(y_test, preds)
+            if auc > best_auc:
+                best_auc = auc
                 best_weights = weights.copy()
 
-    # Final evaluation with best weights
-    preds = np.array([(circuit(x, best_weights) + 1) / 2 for x in X_test])
-    acc = accuracy_score(y_test, (preds > 0.5).astype(int))
-    auc = roc_auc_score(y_test, preds)
+    # Final predictions with best weights
+    probs = np.array([(circuit(x, best_weights) + 1) / 2 for x in X_test])
+    preds = (probs > 0.5).astype(int)
 
-    # === Accurate resource profiling using modern PennyLane API ===
+    # Classification metrics (all datasets are binary → pos_label=1)
+    acc   = accuracy_score(y_test, preds)
+    auc   = roc_auc_score(y_test, probs)
+    prec  = precision_score(y_test, preds, pos_label=1, zero_division=0)
+    rec   = recall_score(y_test, preds, pos_label=1, zero_division=0)
+    f1    = f1_score(y_test, preds, pos_label=1, zero_division=0)
+
+    # Resource profiling
     specs = qml.specs(circuit)(X_test[0], best_weights)
-    res = specs["resources"]                     # Resources object
+    res = specs["resources"]
     depth = res.depth
-    num_wires = res.num_wires
-    total_gates = sum(res.gate_types.values())   # counts all gates (including encoding)
+    gates = sum(res.gate_types.values())
+    resource_cost = np.clip((n_qubits/32 + depth/250 + gates/2500)/3, 0, 1)
 
-    # Normalised resource cost ∈ [0,1] (empirically tuned for 4–16 qubit VQCs)
-    resource_cost = (num_wires / 32.0 + depth / 200.0 + total_gates / 2000.0) / 3.0
-    resource_cost = np.clip(resource_cost, 0.0, 1.0)
-
-    return acc, auc, resource_cost
+    return acc, auc, prec, rec, f1, resource_cost
