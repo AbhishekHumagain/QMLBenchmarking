@@ -40,3 +40,11 @@ def load_dataset(name: str, n_components: int = 8):
     X = MinMaxScaler(feature_range=(0, np.pi)).fit_transform(X)
 
     return train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+def load_dataset_classical(name: str, n_components: int = 8):
+    """Returns X_train, X_test, y_train, y_test with same preprocessing as quantum"""
+    X_train, X_test, y_train, y_test = load_dataset(name, n_components=n_components)
+    # Quantum pipeline scales to [0,π] for rotations → undo to [0,1] for classical fairness
+    X_train = X_train / np.pi
+    X_test  = X_test  / np.pi
+    return X_train, X_test, y_train, y_test

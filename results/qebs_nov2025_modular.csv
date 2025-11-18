@@ -1,13 +1,25 @@
-Dataset,Encoding,Qubits,Accuracy,AUC,Precision,Recall,F1-Score,ResourceCost,CES
-iris,iqp,8,0.3667,0.315,0.2353,0.4,0.2963,0.1675,0.5873
-iris,basis,8,0.2,0.06,0.1818,0.4,0.25,0.1675,0.4598
-iris,bphe,8,0.9667,0.97,1.0,0.9,0.9474,0.1676,0.9147
-iris,amplitude,8,0.3333,1.0,0.3333,1.0,0.5,0.1675,0.9298
-cancer,iqp,8,0.4211,0.4246,0.5556,0.4167,0.4762,0.1675,0.6421
-cancer,basis,8,0.5702,0.4777,0.6353,0.75,0.6879,0.1675,0.6686
-cancer,bphe,8,0.386,0.3783,0.5333,0.2222,0.3137,0.1676,0.6189
-cancer,amplitude,8,0.3509,0.2457,0.0,0.0,0.0,0.1675,0.5526
-mnist_4vs9,iqp,16,0.5078,0.5054,0.5128,0.5036,0.5082,0.3201,0.6366
-mnist_4vs9,basis,16,0.4802,0.478,0.4811,0.3743,0.421,0.3201,0.6229
-mnist_4vs9,bphe,16,0.4001,0.4262,0.3576,0.2364,0.2846,0.3203,0.597
-mnist_4vs9,amplitude,16,0.6482,0.7325,0.6002,0.908,0.7227,0.3201,0.7502
+Dataset,Encoding,Qubits,Accuracy,AUC,Precision,Recall,F1-Score,ResourceCost,CES,Type,Model,Features
+iris,iqp,8.0,0.3,0.275,0.0769,0.1,0.087,0.1675,0.5673,,,
+iris,basis,8.0,0.4667,0.24,0.3846,1.0,0.5556,0.1675,0.5498,,,
+iris,bphe,8.0,0.0333,0.0,0.0476,0.1,0.0645,0.1676,0.4297,,,
+iris,amplitude,8.0,0.9667,1.0,1.0,0.9,0.9474,0.1675,0.9298,,,
+cancer,iqp,8.0,0.4912,0.495,0.6667,0.3889,0.4912,0.1675,0.6773,,,
+cancer,basis,8.0,0.4912,0.5627,0.6591,0.4028,0.5,0.1675,0.7111,,,
+cancer,bphe,8.0,0.5965,0.5589,0.6413,0.8194,0.7195,0.1676,0.7092,,,
+cancer,amplitude,8.0,0.4123,0.3198,0.5362,0.5139,0.5248,0.1675,0.5896,,,
+mnist_4vs9,iqp,16.0,0.5118,0.5076,0.5169,0.505,0.5109,0.3201,0.6377,,,
+mnist_4vs9,basis,16.0,0.5452,0.5458,0.5418,0.643,0.588,0.3201,0.6568,,,
+mnist_4vs9,bphe,16.0,0.4567,0.3828,0.4539,0.375,0.4107,0.3203,0.5753,,,
+mnist_4vs9,amplitude,16.0,0.4951,0.6783,0.0,0.0,0.0,0.3201,0.7231,,,
+iris,,,1.0,1.0,1.0,1.0,1.0,0.1661,0.9302,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LogReg,8.0
+iris,,,1.0,1.0,1.0,1.0,1.0,0.1661,0.9302,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LinearSVM,8.0
+iris,,,1.0,1.0,1.0,1.0,1.0,0.4501,0.845,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",RandomForest,8.0
+iris,,,0.7,0.65,1.0,0.1,0.1818,0.5697,0.6341,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",MLP,8.0
+cancer,,,0.9474,0.9934,0.9231,1.0,0.96,0.1661,0.9269,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LogReg,8.0
+cancer,,,0.9474,0.9947,0.9342,0.9861,0.9595,0.1661,0.9275,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LinearSVM,8.0
+cancer,,,0.9123,0.9866,0.9559,0.9028,0.9286,0.6327,0.7835,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",RandomForest,8.0
+cancer,,,0.6316,0.5995,0.6316,1.0,0.7742,0.5697,0.6089,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",MLP,8.0
+mnist_4vs9,,,0.9362,0.9824,0.9337,0.9404,0.937,0.2085,0.9087,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LogReg,16.0
+mnist_4vs9,,,0.9456,0.9846,0.9507,0.9411,0.9458,0.2085,0.9098,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",LinearSVM,16.0
+mnist_4vs9,,,0.9583,0.9908,0.961,0.9562,0.9586,0.8418,0.7229,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",RandomForest,16.0
+mnist_4vs9,,,0.9601,0.9902,0.9755,0.9447,0.9599,0.5822,0.8004,"{'iqp': <function encoding at 0x11f158720>, 'basis': <function encoding at 0x11f1589a0>, 'bphe': <function bphe_encoding at 0x11f158c20>, 'amplitude': <function amplitude_encoding at 0x11f158ea0>}",MLP,16.0
