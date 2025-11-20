@@ -1,4 +1,16 @@
-Category,Encoding,Dataset,FeaturesAfterEnc,Accuracy,AUC,Precision,Recall,F1-Score,ResourceCost,CES
+Category,EncodingMethods,Dataset,Qubits/Features,Accuracy,AUC,Precision,Recall,F1-Score,ResourceCost,CES
+Classical,LogReg,iris,8,1.0,1.0,1.0,1.0,1.0,0.1661,0.9302
+Classical,LinearSVM,iris,8,1.0,1.0,1.0,1.0,1.0,0.1661,0.9302
+Classical,RandomForest,iris,8,1.0,1.0,1.0,1.0,1.0,0.4501,0.845
+Classical,MLP,iris,8,0.7,0.65,1.0,0.1,0.1818,0.5697,0.6341
+Classical,LogReg,cancer,8,0.9474,0.9934,0.9231,1.0,0.96,0.1661,0.9269
+Classical,LinearSVM,cancer,8,0.9474,0.9947,0.9342,0.9861,0.9595,0.1661,0.9275
+Classical,RandomForest,cancer,8,0.9123,0.9866,0.9559,0.9028,0.9286,0.6327,0.7835
+Classical,MLP,cancer,8,0.6316,0.5995,0.6316,1.0,0.7742,0.5697,0.6089
+Classical,LogReg,mnist_4vs9,16,0.9362,0.9824,0.9337,0.9404,0.937,0.2085,0.9087
+Classical,LinearSVM,mnist_4vs9,16,0.9456,0.9846,0.9507,0.9411,0.9458,0.2085,0.9098
+Classical,RandomForest,mnist_4vs9,16,0.9583,0.9908,0.961,0.9562,0.9586,0.8418,0.7229
+Classical,MLP,mnist_4vs9,16,0.9601,0.9902,0.9755,0.9447,0.9599,0.5822,0.8004
 Classical-Categorical,label+LogReg,iris,8,1.0,1.0,1.0,1.0,1.0,0.317,0.8849
 Classical-Categorical,label+LinearSVM,iris,8,1.0,1.0,1.0,1.0,1.0,0.317,0.8849
 Classical-Categorical,label+RandomForest,iris,8,1.0,1.0,1.0,1.0,1.0,0.317,0.8849
