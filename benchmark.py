@@ -8,12 +8,12 @@ from utils.metrics import composite_efficiency_score
 from models.vqc import create_circuit, train_and_evaluate
 from qml_encodings import angle_xy, iqp, basis, bphe, amplitude
 from models.classical_models import CLASSICAL_MODELS, classical_train_and_evaluate
-# from models.classical_categorical import CLASSICAL_CAT_ENCODINGS, classical_categorical_train_and_evaluate
+from models.classical_categorical import CLASSICAL_CAT_ENCODINGS, classical_categorical_train_and_evaluate
 
 os.makedirs("results", exist_ok=True)
 
 ENCODINGS = {
-    # "angle_xy": angle_xy.encoding,
+    "angle_xy": angle_xy.encoding,
     "iqp":      iqp.encoding,
     "basis":    basis.encoding,
     "bphe":     bphe.bphe_encoding,
@@ -69,79 +69,55 @@ for ds in datasets:
         })
         print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f} CES={ces:.4f}")
 
-# print("\n=== CLASSICAL CATEGORICAL ENCODINGS ===")
-# for ds in datasets:
-#     n_f = 16 if "mnist" in ds else 8
-#     print(f"\nDataset: {ds} – {n_f} original features → 8 bins each")
-#     for enc_name, encoder in CLASSICAL_CAT_ENCODINGS.items():
-#         print(f"  → {enc_name:12}", end="\r")
-#         cat_results = classical_categorical_train_and_evaluate(ds, enc_name, encoder, n_f)
-#         results.extend(cat_results)   # append all 4 classifier results per encoding
+print("\n=== CLASSICAL CATEGORICAL ENCODINGS ===")
+for ds in datasets:
+    n_f = 16 if "mnist" in ds else 8
+    print(f"\nDataset: {ds} – {n_f} original features → 8 bins each")
+    for enc_name, encoder in CLASSICAL_CAT_ENCODINGS.items():
+        print(f"  → {enc_name:12}", end="\r")
+        cat_results = classical_categorical_train_and_evaluate(ds, enc_name, encoder, n_f)
+        results.extend(cat_results)   # append all 4 classifier results per encoding
 
-# ==================== PREVIOUS BENCHMARK LOOP (FOR REFERENCE) ====================
-# results = []
-# datasets = ["iris", "cancer", "mnist_4vs9"]
-
-# for ds in datasets:
-#     n_qubits = 16 if "mnist" in ds else 8
-#     print(f"\n=== {ds.upper()} – {n_qubits} qubits ===")
-#     for name, enc_fn in ENCODINGS.items():
-#         print(f"  → {name:12}", end="\r")
-#         acc, auc, rc = train_and_evaluate(dataset_name=ds,
-#                                           encoding_name=name,
-#                                           encoding_fn=enc_fn,
-#                                           n_qubits=n_qubits)
-#         ces = composite_efficiency_score(float(auc), float(rc))
-#         results.append({
-#             "Dataset": ds,
-#             "Encoding": name,
-#             "Qubits": n_qubits,
-#             "Accuracy": round(acc, 4),
-#             "AUC": round(auc, 4),
-#             "ResourceCost": round(rc, 4),
-#             "CES": round(ces, 4)
-#         })
-#         print(f"  → {name:12} AUC={auc:.4f} CES={ces:.4f}")
 
 df = pd.DataFrame(results)
 print("\n=== FINAL QEBS BENCHMARK TABLE ===")
 print(df)
-df.to_csv("results/qebs_quantum_vs_classical_nov2025-1.csv", index=False)
-
-g = sns.catplot(
-    data=df,
-    kind="bar",
-    x="Dataset",
-    y="CES",
-    hue="EncodingMethods",
-    col="Category",
-    palette="viridis",
-    height=6,
-    aspect=1.1,
-    legend_out=True,
-    edgecolor="0.3"
-)
+df.to_csv("results/qebs_quantum_vs_classical_nov2025-2.csv", index=False)
 
 # g = sns.catplot(
 #     data=df,
 #     kind="bar",
 #     x="Dataset",
 #     y="CES",
-#     hue="EncodingMethods" ,
-#     # if "Category" == "Quantum" else "Encoding",   # simplified hue logic
+#     hue="EncodingMethods",
 #     col="Category",
 #     palette="viridis",
-#     height=7, aspect=1.2 # different y-scales OK because classical dominates
+#     height=6,
+#     aspect=1.1,
+#     legend_out=True,
+#     edgecolor="0.3"
 # )
-# g.set_titles("{col_name}")
-# g.fig.suptitle("Quantum vs Classical (Continuous & Categorical) Encodings – CES", y=1.02)
-# plt.savefig("results/CES_full_comparison_nov2025.png", dpi=300)
 
-g.set_axis_labels("Dataset", "Composite Efficiency Score (CES)")
-g.set_titles("{col_name} Methods")
-g.fig.suptitle("Quantum vs Classical Encoding Methods – Composite Efficiency Score", 
-                fontsize=16, y=1.05)
-g.add_legend(title="EncodingMethods")
+g = sns.catplot(
+    data=df,
+    kind="bar",
+    x="Dataset",
+    y="CES",
+    hue="EncodingMethods" ,
+    # if "Category" == "Quantum" else "Encoding",   # simplified hue logic
+    col="Category",
+    palette="viridis",
+    height=7, aspect=1.2 # different y-scales OK because classical dominates
+)
+g.set_titles("{col_name}")
+g.fig.suptitle("Quantum vs Classical (Continuous & Categorical) Encodings – CES", y=1.02)
+plt.savefig("results/CES_full_comparison_nov2025-2.png", dpi=300)
+
+# g.set_axis_labels("Dataset", "Composite Efficiency Score (CES)")
+# g.set_titles("{col_name} Methods")
+# g.fig.suptitle("Quantum vs Classical Encoding Methods – Composite Efficiency Score", 
+#                 fontsize=16, y=1.05)
+# g.add_legend(title="EncodingMethods")
 
 # Optional: annotate best performer per panel
 for ax in g.axes.flat:
@@ -149,5 +125,5 @@ for ax in g.axes.flat:
         ax.bar_label(container, fmt="%.3f", fontsize=9)
 
 plt.tight_layout()
-plt.savefig("results/CES_quantum_vs_classical_nov2025-1.png", dpi=300)
+plt.savefig("results/CES_quantum_vs_classical_nov2025-2.png", dpi=300)
 plt.show()
