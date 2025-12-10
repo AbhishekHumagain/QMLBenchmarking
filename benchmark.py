@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from utils.data_loader import load_dataset
-from utils.metrics import composite_efficiency_score
+# from utils.metrics import composite_efficiency_score
 from models.vqc import create_circuit, train_and_evaluate
 from qml_encodings import angle_xy, iqp, basis, bphe, amplitude
 from models.classical_models import CLASSICAL_MODELS, classical_train_and_evaluate
@@ -30,7 +30,7 @@ for ds in datasets:
     for name, enc_fn in ENCODINGS.items():
         print(f"  Running {name}...")
         acc, auc, prec, rec, f1, rc = train_and_evaluate(ds, name, enc_fn, n_q)
-        ces = composite_efficiency_score(auc, rc)
+        # ces = composite_efficiency_score(auc, rc)
         results.append({
             "Category": "Quantum",
             "EncodingMethods": name,
@@ -42,9 +42,9 @@ for ds in datasets:
             "Recall": round(rec,4),
             "F1-Score": round(f1,4),
             "ResourceCost": round(rc,4),
-            "CES": round(ces,4)
+            # "CES": round(ces,4)
         })
-        print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f} CES={ces:.4f}")
+        print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f}")
 
 print("\n=== CLASSICAL BASELINES ===")
 for ds in datasets:
@@ -53,7 +53,7 @@ for ds in datasets:
     for name, model in CLASSICAL_MODELS.items():
         print(f"  → {name:12}", end="\r")
         acc, auc,prec, rec, f1, rc = classical_train_and_evaluate(ds, name, model, n_f)
-        ces = composite_efficiency_score(auc, rc) 
+        # ces = composite_efficiency_score(auc, rc) 
         results.append({
             "Category": "Classical",
             "EncodingMethods": name,  
@@ -65,9 +65,9 @@ for ds in datasets:
             "Recall": round(rec,4),
             "F1-Score": round(f1,4),
             "ResourceCost": round(rc,4),
-            "CES": round(ces,4)
+            # "CES": round(ces,4)
         })
-        print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f} CES={ces:.4f}")
+        print(f"  → {name:12} AUC={auc:.4f} F1={f1:.4f}")
 
 print("\n=== CLASSICAL CATEGORICAL ENCODINGS ===")
 for ds in datasets:
@@ -102,7 +102,7 @@ g = sns.catplot(
     data=df,
     kind="bar",
     x="Dataset",
-    y="CES",
+    # y="CES",
     hue="EncodingMethods" ,
     # if "Category" == "Quantum" else "Encoding",   # simplified hue logic
     col="Category",
@@ -110,8 +110,8 @@ g = sns.catplot(
     height=7, aspect=1.2 # different y-scales OK because classical dominates
 )
 g.set_titles("{col_name}")
-g.fig.suptitle("Quantum vs Classical (Continuous & Categorical) Encodings – CES", y=1.02)
-plt.savefig("results/CES_full_comparison_nov2025-2.png", dpi=300)
+g.fig.suptitle("Quantum vs Classical (Continuous & Categorical) Encodings", y=1.02)
+plt.savefig("results/Full_comparison_nov2025-2.png", dpi=300)
 
 # g.set_axis_labels("Dataset", "Composite Efficiency Score (CES)")
 # g.set_titles("{col_name} Methods")
@@ -125,5 +125,5 @@ for ax in g.axes.flat:
         ax.bar_label(container, fmt="%.3f", fontsize=9)
 
 plt.tight_layout()
-plt.savefig("results/CES_quantum_vs_classical_nov2025-2.png", dpi=300)
+plt.savefig("results/Quantum_vs_classical_nov2025-2.png", dpi=300)
 plt.show()

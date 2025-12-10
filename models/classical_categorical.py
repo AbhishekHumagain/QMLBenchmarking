@@ -10,7 +10,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, roc_auc_score, \
                              precision_score, recall_score, f1_score
 
-from utils.metrics import composite_efficiency_score
+# from utils.metrics import composite_efficiency_score
 
 # Discretize all features into 8 uniform bins → categorical
 def discretize(X_train, X_test):
@@ -72,7 +72,7 @@ def classical_categorical_train_and_evaluate(dataset_name, enc_name, encoder, n_
             "Precision": round(prec,4),
             "Recall": round(rec,4),
             "F1-Score": round(f1,4),
-            "ResourceCost": round(rc,4),
-            "CES": round(composite_efficiency_score(auc, rc),4)
+            "ResourceCost": round(rc,4)
+            #"CES": round(composite_efficiency_score(auc, rc),4)
         })
     return results

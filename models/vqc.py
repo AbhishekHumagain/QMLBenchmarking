@@ -27,7 +27,6 @@ def create_circuit(encoding_fn, n_qubits=8, n_layers=5):
     return circuit
 
 # ==================== TRAINING & EVALUATION ====================
-# Inside train_and_evaluate function – replace the entire function with this version
 def train_and_evaluate(dataset_name, encoding_name, encoding_fn,
                        n_qubits=8, n_layers=5, epochs=150, batch_size=32):
     from utils.data_loader import load_dataset
